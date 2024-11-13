@@ -63,14 +63,17 @@ import org.koin.androidx.compose.koinViewModel
 //val Teal200 = Color(0xFF03DAC5)
 val DarkTheme_textColor = Color(200, 200, 200)
 
+/**
+ *
+ */
 @Composable
 fun getGridCellFixed_Count_ForOrientation():Int
 {
     var orient = LocalConfiguration.current.orientation
-    if(orient == Configuration.ORIENTATION_LANDSCAPE)
-        return 3
-    else
-        return 2
+    var landScape = Configuration.ORIENTATION_LANDSCAPE
+
+    val count = if(orient == landScape ) 3 else 2;
+    return  count;
 }
 
 @Composable
@@ -156,7 +159,7 @@ private fun SeasonChartViewContent(
                 bottom = bottomBarPadding
             ),
             verticalArrangement = Arrangement.spacedBy(4.dp),
-            horizontalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterHorizontally)
+            horizontalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterHorizontally )
         ) {
             items(
                 items = uiState.animes,
