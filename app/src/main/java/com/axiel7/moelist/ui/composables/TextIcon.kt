@@ -57,7 +57,6 @@ fun TextIconHorizontal(
             color = color,
             fontSize = fontSize,
             lineHeight = lineHeight,
-
         )
     }
 }
@@ -69,9 +68,6 @@ fun TextIconHorizontalPreview() {
         TextIconHorizontal(text = "This is an example", icon = R.drawable.ic_round_details_star_24)
     }
 }
-
-
-
 
 
 
