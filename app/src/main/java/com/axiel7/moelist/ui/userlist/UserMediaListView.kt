@@ -389,6 +389,3 @@ fun UserMediaListView(
         }
     }//:Box
 }
-
-
-
