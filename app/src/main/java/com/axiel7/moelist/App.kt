@@ -8,7 +8,7 @@ import coil3.disk.DiskCache
 import coil3.disk.directory
 import coil3.memory.MemoryCache
 import coil3.request.crossfade
-import com.axiel7.moelist.GitHubPRs.Anilist.AnilistQuery
+import com.axiel7.moelist._GitHubPRs.Anilist.AnilistQuery
 import com.axiel7.moelist.data.model.media.TitleLanguage
 import com.axiel7.moelist.di.dataStoreModule
 import com.axiel7.moelist.di.databaseModule

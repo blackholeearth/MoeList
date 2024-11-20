@@ -25,6 +25,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.currentRecomposeScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -34,7 +35,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.dropUnlessResumed
-import com.axiel7.moelist.GitHubPRs.Anilist.AddNextAiringEpInfo_Compose
+import com.axiel7.moelist._GitHubPRs.Anilist.AddNextAiringEpInfo_Compose
 import com.axiel7.moelist.data.model.media.BaseMediaNode
 import com.axiel7.moelist.data.model.media.BaseUserMediaList
 import com.axiel7.moelist.ui.base.ListStyle
@@ -71,7 +72,11 @@ fun UserMediaListView(
     val haptic = LocalHapticFeedback.current
     val pullRefreshState = rememberPullToRefreshState()
 
-    AddNextAiringEpInfo_Compose(uiState,event)
+    //fix - endless loop
+    LaunchedEffect(key1 = "AddNextAiringEpInfo_Compose",
+        AddNextAiringEpInfo_Compose(uiState, event)
+    ) { }
+
 
     @Composable
     fun StandardItemView(item: BaseUserMediaList<out BaseMediaNode>) {

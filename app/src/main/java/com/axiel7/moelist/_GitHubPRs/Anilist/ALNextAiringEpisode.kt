@@ -1,4 +1,4 @@
-package com.axiel7.moelist.GitHubPRs.Anilist
+package com.axiel7.moelist._GitHubPRs.Anilist
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -66,7 +66,7 @@ data class NextAiringEpisode(
 }
 @Serializable
 data class Title(
-    val english: String,
+    val english: String?,
 )
 {
 
@@ -99,13 +99,20 @@ fun secondsToDays_AsString(seconds: Long): String {
 
     var HumanReadbleTime =""
     var pluralSuffix =""
-    if(seconds> _1day) { val days = seconds / _1day; HumanReadbleTime="${days} days" }
-    if(seconds== _1day) { val days = seconds / _1day; HumanReadbleTime="${days} day" }
-    else if(seconds>_1hour) { val days = seconds / _1hour; HumanReadbleTime="${days} hours" }
-    else if(seconds==_1hour) { val days = seconds / _1hour; HumanReadbleTime="${days} hour"}
-    else if(seconds>_1min) { val days = seconds / _1min; HumanReadbleTime="${days} mins"}
-    else if(seconds==_1min) { val days = seconds / _1min; HumanReadbleTime="${days} min"}
-    else { val days = seconds / _1min; HumanReadbleTime="? sec"}
+    if(seconds> _1day)
+    { val days = seconds / _1day; HumanReadbleTime="${days} days" }
+    else if(seconds== _1day)
+    { val days = seconds / _1day; HumanReadbleTime="${days} day" }
+    else if(seconds>_1hour)
+    { val days = seconds / _1hour; HumanReadbleTime="${days} hours" }
+    else if(seconds==_1hour)
+    { val days = seconds / _1hour; HumanReadbleTime="${days} hour"}
+    else if(seconds>_1min)
+    { val days = seconds / _1min; HumanReadbleTime="${days} mins"}
+    else if(seconds==_1min)
+    { val days = seconds / _1min; HumanReadbleTime="${days} min"}
+    else
+    { val days = seconds / _1min; HumanReadbleTime="? sec"}
 
     return HumanReadbleTime;
 }
