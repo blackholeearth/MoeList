@@ -194,7 +194,6 @@ fun CompactUserMediaListItem(
     }//:Card
 }
 
-
 @Composable
 fun CompactUserMediaListItemPlaceholder() {
     Column(
