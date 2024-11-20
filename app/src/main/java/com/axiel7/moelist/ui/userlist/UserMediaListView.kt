@@ -34,6 +34,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.dropUnlessResumed
+import com.axiel7.moelist.GitHubPRs.Anilist.AddNextAiringEpInfo_Compose
 import com.axiel7.moelist.data.model.media.BaseMediaNode
 import com.axiel7.moelist.data.model.media.BaseUserMediaList
 import com.axiel7.moelist.ui.base.ListStyle
@@ -69,6 +70,8 @@ fun UserMediaListView(
     val layoutDirection = LocalLayoutDirection.current
     val haptic = LocalHapticFeedback.current
     val pullRefreshState = rememberPullToRefreshState()
+
+    AddNextAiringEpInfo_Compose(uiState,event)
 
     @Composable
     fun StandardItemView(item: BaseUserMediaList<out BaseMediaNode>) {

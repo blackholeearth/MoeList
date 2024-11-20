@@ -10,6 +10,7 @@ plugins {
 
 val properties = Properties()
 properties.load(project.rootProject.file("private.properties").reader())
+properties.load(project.rootProject.file("private.properties").reader())
 
 android {
     compileSdk = 35
@@ -44,6 +45,8 @@ android {
                 "proguard-rules.pro"
             )
             buildConfigField("String", "CLIENT_ID", properties.getProperty("CLIENT_ID"))
+            buildConfigField("String", "ANILIST_CLIENT_ID", properties.getProperty("ANILIST_CLIENT_ID"))
+            buildConfigField("String", "ANILIST_CLIENT_SECRET", properties.getProperty("ANILIST_CLIENT_SECRET"))
         }
         release {
             isDebuggable = false
@@ -54,6 +57,8 @@ android {
                 "proguard-rules.pro"
             )
             buildConfigField("String", "CLIENT_ID", properties.getProperty("CLIENT_ID"))
+            buildConfigField("String", "ANILIST_CLIENT_ID", properties.getProperty("ANILIST_CLIENT_ID"))
+            buildConfigField("String", "ANILIST_CLIENT_SECRET", properties.getProperty("ANILIST_CLIENT_SECRET"))
         }
     }
     splits {
@@ -158,4 +163,10 @@ dependencies {
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
+
+    //kache
+    // For in-memory cache
+    implementation("com.mayakapps.kache:kache:2.1.0")
+    // For persistent cache
+    implementation("com.mayakapps.kache:file-kache:2.1.0")
 }
