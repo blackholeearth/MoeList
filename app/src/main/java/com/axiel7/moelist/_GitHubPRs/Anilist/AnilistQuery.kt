@@ -145,6 +145,9 @@ class AnilistQuery {
                 try {
                     GetAiringInfo_ToPoco(key)
                 } catch (ex: Throwable) {
+                    println(ex.message )
+                    println(ex.cause )
+                    println("GetAiringInfo_ToPoco_FromCache" )
                     null // returning null, The value (null) will not be cached
                 }
             }
