@@ -47,7 +47,6 @@ class App : Application(), KoinComponent, SingletonImageLoader.Factory {
         }
 
         GlobalScope.launch(Dispatchers.IO) {
-            AnilistQuery.appThis = this;
             AnilistQuery.cache = AnilistQuery.New_ObjectKache()
         }
 
