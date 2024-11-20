@@ -125,7 +125,6 @@ fun CompactUserMediaListItem(
 
                 if (isAiring) {
                     Text(
-                        //text = broadcast?.airingInString() ?: stringResource(R.string.airing),
                         text = AiringEpN_in_Ndays_ToString(broadcast, item),
                         modifier = Modifier.padding(horizontal = 16.dp),
                         color = MaterialTheme.colorScheme.primary,

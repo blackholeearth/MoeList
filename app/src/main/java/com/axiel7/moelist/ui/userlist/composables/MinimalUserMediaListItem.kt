@@ -80,7 +80,6 @@ fun MinimalUserMediaListItem(
                 if (isAiring) {
                     Text(
                         text = AiringEpN_in_Ndays_ToString(broadcast, item),
-                        //text = broadcast?.airingInString() ?: stringResource(R.string.airing),
                         color = MaterialTheme.colorScheme.primary,
                         fontSize = 16.sp,
                         lineHeight = 19.sp,
