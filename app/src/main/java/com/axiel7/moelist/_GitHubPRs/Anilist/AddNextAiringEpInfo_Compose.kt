@@ -9,6 +9,8 @@ import com.axiel7.moelist.ui.userlist.UserMediaListUiState
 import kotlinx.coroutines.runBlocking
 
 /**
+ * ---!!!! DO NOT USER THİS IN VİEW -- İT CAUSES endless LOOP, wrong EditDialog values ,
+ *
  * add Airing Next Ep No from AnilistApi
  * --  ie:Ep 8 in 5 days
  */
@@ -36,7 +38,7 @@ fun AddNextAiringEpInfo_Compose(uiState: UserMediaListUiState, event: UserMediaL
         // Perform network operation here
         runBlocking {
             var al_mediaList = AnilistQuery.GetAiringInfo_ToPoco_FromCache(airingAnimes_idlist)
-            if (al_mediaList?.isEmpty() == true)
+            if (al_mediaList.isNullOrEmpty() == true)
                 return@runBlocking
 
             uiState.mediaList.filter { it.isAiring }.forEach { it ->
