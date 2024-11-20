@@ -8,6 +8,10 @@ import com.axiel7.moelist.ui.userlist.UserMediaListEvent
 import com.axiel7.moelist.ui.userlist.UserMediaListUiState
 import kotlinx.coroutines.runBlocking
 
+/**
+ * add Airing Next Ep No from AnilistApi
+ * --  ie:Ep 8 in 5 days
+ */
 @Composable
 fun AddNextAiringEpInfo_Compose(uiState: UserMediaListUiState, event: UserMediaListEvent?  ) {
 

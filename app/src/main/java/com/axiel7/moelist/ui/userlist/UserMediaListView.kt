@@ -71,9 +71,7 @@ fun UserMediaListView(
     val haptic = LocalHapticFeedback.current
     val pullRefreshState = rememberPullToRefreshState()
 
-    //add Airing NextEp No from AnilistApi
     AddNextAiringEpInfo_Compose(uiState,event)
-    //using AddNextAiringEpInfo_v2 at AniRepo
 
     @Composable
     fun StandardItemView(item: BaseUserMediaList<out BaseMediaNode>) {
