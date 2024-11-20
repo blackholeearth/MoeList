@@ -1,4 +1,4 @@
-package com.axiel7.moelist.Anilist
+package com.axiel7.moelist.GitHubPRs.Anilist
 
 import androidx.compose.runtime.Composable
 import com.axiel7.moelist.data.model.anime.AnimeNode
