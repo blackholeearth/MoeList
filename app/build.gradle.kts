@@ -35,6 +35,9 @@ android {
 
     buildTypes {
         debug {
+            /*AppName Shows up in Launcher*/
+            resValue("string", "app_name", "Moelist ForkB - Debug")
+
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-DEBUG"
             isDebuggable = true
@@ -49,6 +52,8 @@ android {
             buildConfigField("String", "ANILIST_CLIENT_SECRET", properties.getProperty("ANILIST_CLIENT_SECRET"))
         }
         release {
+            resValue("string", "app_name", "Moelist ForkB")
+
             isDebuggable = false
             isMinifyEnabled = true
             isShrinkResources = true
