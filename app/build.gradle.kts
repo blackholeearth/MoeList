@@ -169,4 +169,8 @@ dependencies {
     implementation("com.mayakapps.kache:kache:2.1.0")
     // For persistent cache
     implementation("com.mayakapps.kache:file-kache:2.1.0")
+
+    //GSON - Shared Pref - List<T> To Json
+    implementation("com.google.code.gson:gson:2.11.0")
+
 }

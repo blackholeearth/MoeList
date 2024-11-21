@@ -4,6 +4,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -55,6 +56,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -68,6 +70,7 @@ import com.axiel7.moelist.ui.base.navigation.NavActionManager
 import com.axiel7.moelist.ui.composables.InfoTitle
 import com.axiel7.moelist.ui.composables.TextIconHorizontal
 import com.axiel7.moelist.ui.composables.TextIconVertical
+import com.axiel7.moelist.ui.composables.TextSubtitleVertical
 import com.axiel7.moelist.ui.composables.defaultPlaceholder
 import com.axiel7.moelist.ui.composables.media.MEDIA_POSTER_BIG_HEIGHT
 import com.axiel7.moelist.ui.composables.media.MEDIA_POSTER_BIG_WIDTH
@@ -215,7 +218,7 @@ private fun MediaDetailsContent(
                 MediaPoster(
                     url = uiState.mediaDetails?.mainPicture?.large,
                     modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                        .padding(start = 16.dp, end = 16.dp, bottom = 8.dp) //bottom:16
                         .size(
                             width = MEDIA_POSTER_BIG_WIDTH.dp,
                             height = MEDIA_POSTER_BIG_HEIGHT.dp
@@ -227,21 +230,19 @@ private fun MediaDetailsContent(
                         })
                 )
                 Column {
-                    // Title
-                    Text(
-                        text = uiState.mediaDetails?.userPreferredTitle() ?: "Loading",
-                        modifier = Modifier
-                            .padding(end = 8.dp, bottom = 8.dp)
-                            .defaultPlaceholder(visible = uiState.isLoading)
-                            .combinedClickable(
-                                onLongClick = {
-                                    uiState.mediaDetails?.title?.let { context.copyToClipBoard(it) }
-                                },
-                                onClick = { }
-                            ),
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
+
+                    if (uiState.mediaDetails is AnimeDetails) {
+                        //Fall 2024
+                        TextIconHorizontal(
+                            text = uiState.mediaDetails.startSeason?.seasonYearText() ?: "Loading",
+                            icon = if (uiState.isAnime) R.drawable.ic_round_event_24
+                            else R.drawable.ic_round_menu_book_24,
+                            modifier = Modifier
+                                .padding(bottom = 8.dp)
+                                .defaultPlaceholder(visible = uiState.isLoading)
+                        )
+                    }
+
                     TextIconHorizontal(
                         text = uiState.mediaDetails?.mediaFormat?.localized() ?: "Loading",
                         icon = if (uiState.isAnime) R.drawable.ic_round_local_movies_24
@@ -250,16 +251,16 @@ private fun MediaDetailsContent(
                             .padding(bottom = 8.dp)
                             .defaultPlaceholder(visible = uiState.isLoading)
                     )
+
+
+                    //23min - can access Only if its Anime
+                    var EpDur_Min :String? = null;
+                    if(uiState.mediaDetails is AnimeDetails){
+                        EpDur_Min = (uiState.mediaDetails as AnimeDetails)?.episodeDurationLocalized()
+                    }
+                    //23min
                     TextIconHorizontal(
-                        text = uiState.mediaDetails?.status?.localized() ?: "Loading",
-                        icon = if (uiState.isAnime) R.drawable.ic_round_rss_feed_24
-                        else R.drawable.round_drive_file_rename_outline_24,
-                        modifier = Modifier
-                            .padding(bottom = 8.dp)
-                            .defaultPlaceholder(visible = uiState.isLoading)
-                    )
-                    TextIconHorizontal(
-                        text = uiState.mediaDetails?.durationText() ?: "Loading",
+                        text = (uiState.mediaDetails?.durationText() + ", " + EpDur_Min) ?: "Loading",
                         icon = if (uiState.isAnime) R.drawable.ic_round_timer_24
                         else R.drawable.ic_round_menu_book_24,
                         modifier = Modifier
@@ -275,6 +276,7 @@ private fun MediaDetailsContent(
                                 .defaultPlaceholder(visible = uiState.isLoading)
                         )
                     }
+                    //Star : 8.50
                     TextIconHorizontal(
                         text = uiState.mediaDetails?.mean.toStringOrNull() ?: "??",
                         icon = R.drawable.ic_round_details_star_24,
@@ -282,8 +284,55 @@ private fun MediaDetailsContent(
                             .padding(bottom = 8.dp)
                             .defaultPlaceholder(visible = uiState.isLoading)
                     )
+                    TextIconHorizontal(
+                        text = uiState.mediaDetails?.numListUsers?.format() ?: UNKNOWN_CHAR,
+                        icon = R.drawable.ic_round_group_24,
+                        modifier = Modifier
+                            .padding(bottom = 8.dp)
+                            .defaultPlaceholder(visible = uiState.isLoading)
+                    )
+
+                    var ColorX =
+                        if(uiState.mediaDetails?.status == MediaStatus.AIRING)
+                            MaterialTheme.colorScheme.primary
+                        else
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                    TextIconHorizontal(
+                        text = uiState.mediaDetails?.status?.localized() ?: "Loading",
+                        icon = if (uiState.isAnime) R.drawable.ic_round_rss_feed_24
+                        else R.drawable.round_drive_file_rename_outline_24,
+                        //this should be neon Blue or Green
+                        // - if theme is Matte Brown this is not Good Choice
+                        color =ColorX,
+                        modifier = Modifier
+                            .padding(bottom = 8.dp)
+                            .defaultPlaceholder(visible = uiState.isLoading)
+                    )
+
                 }
             }//:Row
+
+            Row (
+                modifier = Modifier
+                    .padding(bottom = 4.dp)
+                    .padding(horizontal = 16.dp)
+            ){
+                // Title
+                Text(
+                    text = uiState.mediaDetails?.userPreferredTitle() ?: "Loading",
+                    modifier = Modifier
+                        .padding(end = 8.dp, bottom = 8.dp)
+                        .defaultPlaceholder(visible = uiState.isLoading)
+                        .combinedClickable(
+                            onLongClick = {
+                                uiState.mediaDetails?.title?.let { context.copyToClipBoard(it) }
+                            },
+                            onClick = { }
+                        ),
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
 
             //Genres
             LazyRow(
@@ -355,43 +404,254 @@ private fun MediaDetailsContent(
                 }
             }
 
-            //Stats
-            InfoTitle(text = stringResource(R.string.stats))
+
+
+            // Stats - Rank, Popularity
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-                    .defaultPlaceholder(visible = uiState.isLoading),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
+                    .horizontalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
-                TextIconVertical(
+                val dividerHeight = 36.dp
+                TextSubtitleVertical(
                     text = uiState.mediaDetails?.rankText().orEmpty(),
-                    icon = R.drawable.ic_round_bar_chart_24,
-                    tooltip = stringResource(R.string.top_ranked)
+//                    text = "${uiState.details?.meanScore?.format().orUnknown()}%",
+                    subtitle = stringResource(R.string.top_ranked),
+                    isLoading = uiState.isLoading
                 )
-                VerticalDivider(modifier = Modifier.height(32.dp))
-
-                TextIconVertical(
+                VerticalDivider_init1()
+                TextSubtitleVertical(
                     text = uiState.mediaDetails?.numScoringUsers?.format() ?: UNKNOWN_CHAR,
-                    icon = R.drawable.ic_round_thumbs_up_down_24,
-                    tooltip = stringResource(R.string.users_scores)
+//                    text = "${uiState.details?.averageScore?.format().orUnknown()}%",
+                    subtitle = stringResource(R.string.users_scores),
+                    isLoading = uiState.isLoading
                 )
-                VerticalDivider(modifier = Modifier.height(32.dp))
-
-                TextIconVertical(
-                    text = uiState.mediaDetails?.numListUsers?.format() ?: UNKNOWN_CHAR,
-                    icon = R.drawable.ic_round_group_24,
-                    tooltip = stringResource(R.string.members)
-                )
-                VerticalDivider(modifier = Modifier.height(32.dp))
-
-                TextIconVertical(
+                VerticalDivider_init1()
+                TextSubtitleVertical(
                     text = "# ${uiState.mediaDetails?.popularity}",
-                    icon = R.drawable.ic_round_trending_up_24,
-                    tooltip = stringResource(R.string.popularity)
+                    subtitle = stringResource(R.string.popularity),
+                    isLoading = uiState.isLoading
                 )
-            }//:Row
+            }//: Row
+
+
+
+//            //Stats
+////            InfoTitle(text = stringResource(R.string.stats))
+//            Row(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(8.dp)
+//                    .defaultPlaceholder(visible = uiState.isLoading),
+//                horizontalArrangement = Arrangement.SpaceEvenly,
+//                verticalAlignment = Alignment.CenterVertically
+//            ) {
+//                TextIconVertical(
+//                    text = uiState.mediaDetails?.rankText().orEmpty(),
+//                    icon = R.drawable.ic_round_bar_chart_24,
+//                    tooltip = stringResource(R.string.top_ranked)
+//                )
+//                VerticalDivider(modifier = Modifier.height(32.dp))
+//
+//                TextIconVertical(
+//                    text = uiState.mediaDetails?.numScoringUsers?.format() ?: UNKNOWN_CHAR,
+//                    icon = R.drawable.ic_round_thumbs_up_down_24,
+//                    tooltip = stringResource(R.string.users_scores)
+//                )
+//                VerticalDivider(modifier = Modifier.height(32.dp))
+//
+////                TextIconVertical(
+////                    text = uiState.mediaDetails?.numListUsers?.format() ?: UNKNOWN_CHAR,
+////                    icon = R.drawable.ic_round_group_24,
+////                    tooltip = stringResource(R.string.members)
+////                )
+////                VerticalDivider(modifier = Modifier.height(32.dp))
+//
+//                TextIconVertical(
+//                    text = "# ${uiState.mediaDetails?.popularity}",
+//                    icon = R.drawable.ic_round_trending_up_24,
+//                    tooltip = stringResource(R.string.popularity)
+//                )
+//            }//:Row
+
+
+
+            //Characters
+            if (uiState.isAnime) {
+                var showCharacters by remember { mutableStateOf(false) }
+
+                InfoTitle(text = stringResource(R.string.characters))
+                if (uiState.characters.isNotEmpty() || uiState.isLoadingCharacters) {
+                    LazyRow(
+                        modifier = Modifier.padding(top = 8.dp),
+                        contentPadding = PaddingValues(horizontal = 16.dp)
+                    ) {
+                        items(
+                            items = uiState.characters,
+                            contentType = { it }
+                        ) { item ->
+                            MediaItemVertical(
+                                imageUrl = item.node.mainPicture?.medium,
+                                title = item.fullName(),
+                                modifier = Modifier.padding(end = 8.dp),
+                                subtitle = {
+                                    Text(
+                                        text = item.role?.localized().orEmpty(),
+                                        color = MaterialTheme.colorScheme.outline,
+                                        fontSize = 13.sp
+                                    )
+                                },
+                                minLines = 2,
+                                onClick = {
+                                    context.openLink(CHARACTER_URL + item.node.id)
+                                }
+                            )
+                        }
+                        if (uiState.isLoadingCharacters) {
+                            item {
+                                CircularProgressIndicator()
+                            }
+                        }
+                    }
+                } else {
+                    TextButton(
+                        onClick = {
+                            showCharacters = true
+                            event?.getCharacters()
+                        },
+                        modifier = Modifier.padding(8.dp)
+                    ) {
+                        Text(text = stringResource(R.string.view_characters))
+                    }
+                }
+            }
+
+
+            //Related
+            if (uiState.relatedAnime.isNotEmpty()) {
+                InfoTitle(text = stringResource(R.string.related_anime))
+                LazyRow(
+                    modifier = Modifier.padding(top = 8.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp)
+                ) {
+                    items(uiState.relatedAnime) { item ->
+                        MediaItemVertical(
+                            imageUrl = item.node.mainPicture?.large,
+                            title = item.node.userPreferredTitle(),
+                            modifier = Modifier.padding(end = 8.dp),
+                            subtitle = {
+                                Text(
+                                    text = item.relationType.localized(),
+                                    color = MaterialTheme.colorScheme.outline,
+                                    fontSize = 13.sp,
+                                    lineHeight = 14.sp
+                                )
+                            },
+                            onClick = dropUnlessResumed {
+                                navActionManager.toMediaDetails(MediaType.ANIME, item.node.id)
+                            }
+                        )
+                    }
+                }
+            }
+            if (uiState.relatedManga.isNotEmpty()) {
+                InfoTitle(text = stringResource(R.string.related_manga))
+                LazyRow(
+                    modifier = Modifier.padding(top = 8.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp)
+                ) {
+                    items(uiState.relatedManga) { item ->
+                        MediaItemVertical(
+                            imageUrl = item.node.mainPicture?.large,
+                            title = item.node.userPreferredTitle(),
+                            modifier = Modifier.padding(end = 8.dp),
+                            subtitle = {
+                                Text(
+                                    text = item.relationType.localized(),
+                                    color = MaterialTheme.colorScheme.outline,
+                                    fontSize = 13.sp,
+                                    lineHeight = 14.sp
+                                )
+                            },
+                            onClick = dropUnlessResumed {
+                                navActionManager.toMediaDetails(MediaType.MANGA, item.node.id)
+                            }
+                        )
+                    }
+                }
+            }
+
+            //Recommendations
+            if (uiState.recommendations.isNotEmpty()) {
+                InfoTitle(text = stringResource(R.string.recommendations))
+                LazyRow(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp)
+                ) {
+                    items(uiState.recommendations) { item ->
+                        MediaItemVertical(
+                            imageUrl = item.node.mainPicture?.large,
+                            title = item.node.userPreferredTitle(),
+                            modifier = Modifier.padding(end = 8.dp),
+                            subtitle = {
+                                TextIconHorizontal(
+                                    text = item.numRecommendations.format() ?: UNKNOWN_CHAR,
+                                    icon = R.drawable.ic_round_thumbs_up_down_16,
+                                    color = MaterialTheme.colorScheme.outline,
+                                    fontSize = 13.sp,
+                                    iconSize = 20.dp,
+                                )
+                            },
+                            minLines = 2,
+                            onClick = dropUnlessResumed {
+                                navActionManager.toMediaDetails(
+                                    mediaType = item.node.mediaType,
+                                    id = item.node.id
+                                )
+                            }
+                        )
+                    }
+                }
+            }
+
+            (uiState.mediaDetails as? AnimeDetails)?.statistics?.status?.toStats()?.let { stats ->
+                InfoTitle(text = stringResource(R.string.status_distribution))
+                HorizontalStatsBar(
+                    stats = stats
+                )
+            }
+
+            //Themes (Music)
+            if (uiState.mediaDetails is AnimeDetails) {
+                uiState.mediaDetails.openingThemes?.let { themes ->
+                    InfoTitle(text = stringResource(R.string.opening))
+                    themes.forEach { theme ->
+                        AnimeThemeItem(
+                            text = theme.text,
+                            onClick = {
+                                context.openAction(
+                                    YOUTUBE_QUERY_URL + theme.text.buildQueryFromThemeText()
+                                )
+                            }
+                        )
+                    }
+                }
+
+                uiState.mediaDetails.endingThemes?.let { themes ->
+                    InfoTitle(text = stringResource(R.string.ending))
+                    themes.forEach { theme ->
+                        AnimeThemeItem(
+                            text = theme.text,
+                            onClick = {
+                                context.openAction(
+                                    YOUTUBE_QUERY_URL + theme.text.buildQueryFromThemeText()
+                                )
+                            }
+                        )
+                    }
+                }
+            }
+
 
             //Info
             InfoTitle(text = stringResource(R.string.more_info))
@@ -492,182 +752,18 @@ private fun MediaDetailsContent(
                 )
             }
 
-            //Characters
-            if (uiState.isAnime) {
-                var showCharacters by remember { mutableStateOf(false) }
 
-                InfoTitle(text = stringResource(R.string.characters))
-                if (uiState.characters.isNotEmpty() || uiState.isLoadingCharacters) {
-                    LazyRow(
-                        modifier = Modifier.padding(top = 8.dp),
-                        contentPadding = PaddingValues(horizontal = 16.dp)
-                    ) {
-                        items(
-                            items = uiState.characters,
-                            contentType = { it }
-                        ) { item ->
-                            MediaItemVertical(
-                                imageUrl = item.node.mainPicture?.medium,
-                                title = item.fullName(),
-                                modifier = Modifier.padding(end = 8.dp),
-                                subtitle = {
-                                    Text(
-                                        text = item.role?.localized().orEmpty(),
-                                        color = MaterialTheme.colorScheme.outline,
-                                        fontSize = 13.sp
-                                    )
-                                },
-                                minLines = 2,
-                                onClick = {
-                                    context.openLink(CHARACTER_URL + item.node.id)
-                                }
-                            )
-                        }
-                        if (uiState.isLoadingCharacters) {
-                            item {
-                                CircularProgressIndicator()
-                            }
-                        }
-                    }
-                } else {
-                    TextButton(
-                        onClick = {
-                            showCharacters = true
-                            event?.getCharacters()
-                        },
-                        modifier = Modifier.padding(8.dp)
-                    ) {
-                        Text(text = stringResource(R.string.view_characters))
-                    }
-                }
-            }
-
-            //Themes
-            if (uiState.mediaDetails is AnimeDetails) {
-                uiState.mediaDetails.openingThemes?.let { themes ->
-                    InfoTitle(text = stringResource(R.string.opening))
-                    themes.forEach { theme ->
-                        AnimeThemeItem(
-                            text = theme.text,
-                            onClick = {
-                                context.openAction(
-                                    YOUTUBE_QUERY_URL + theme.text.buildQueryFromThemeText()
-                                )
-                            }
-                        )
-                    }
-                }
-
-                uiState.mediaDetails.endingThemes?.let { themes ->
-                    InfoTitle(text = stringResource(R.string.ending))
-                    themes.forEach { theme ->
-                        AnimeThemeItem(
-                            text = theme.text,
-                            onClick = {
-                                context.openAction(
-                                    YOUTUBE_QUERY_URL + theme.text.buildQueryFromThemeText()
-                                )
-                            }
-                        )
-                    }
-                }
-            }
-
-            //Related
-            if (uiState.relatedAnime.isNotEmpty()) {
-                InfoTitle(text = stringResource(R.string.related_anime))
-                LazyRow(
-                    modifier = Modifier.padding(top = 8.dp),
-                    contentPadding = PaddingValues(horizontal = 16.dp)
-                ) {
-                    items(uiState.relatedAnime) { item ->
-                        MediaItemVertical(
-                            imageUrl = item.node.mainPicture?.large,
-                            title = item.node.userPreferredTitle(),
-                            modifier = Modifier.padding(end = 8.dp),
-                            subtitle = {
-                                Text(
-                                    text = item.relationType.localized(),
-                                    color = MaterialTheme.colorScheme.outline,
-                                    fontSize = 13.sp,
-                                    lineHeight = 14.sp
-                                )
-                            },
-                            onClick = dropUnlessResumed {
-                                navActionManager.toMediaDetails(MediaType.ANIME, item.node.id)
-                            }
-                        )
-                    }
-                }
-            }
-            if (uiState.relatedManga.isNotEmpty()) {
-                InfoTitle(text = stringResource(R.string.related_manga))
-                LazyRow(
-                    modifier = Modifier.padding(top = 8.dp),
-                    contentPadding = PaddingValues(horizontal = 16.dp)
-                ) {
-                    items(uiState.relatedManga) { item ->
-                        MediaItemVertical(
-                            imageUrl = item.node.mainPicture?.large,
-                            title = item.node.userPreferredTitle(),
-                            modifier = Modifier.padding(end = 8.dp),
-                            subtitle = {
-                                Text(
-                                    text = item.relationType.localized(),
-                                    color = MaterialTheme.colorScheme.outline,
-                                    fontSize = 13.sp,
-                                    lineHeight = 14.sp
-                                )
-                            },
-                            onClick = dropUnlessResumed {
-                                navActionManager.toMediaDetails(MediaType.MANGA, item.node.id)
-                            }
-                        )
-                    }
-                }
-            }
-
-            //Recommendations
-            if (uiState.recommendations.isNotEmpty()) {
-                InfoTitle(text = stringResource(R.string.recommendations))
-                LazyRow(
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    contentPadding = PaddingValues(horizontal = 16.dp)
-                ) {
-                    items(uiState.recommendations) { item ->
-                        MediaItemVertical(
-                            imageUrl = item.node.mainPicture?.large,
-                            title = item.node.userPreferredTitle(),
-                            modifier = Modifier.padding(end = 8.dp),
-                            subtitle = {
-                                TextIconHorizontal(
-                                    text = item.numRecommendations.format() ?: UNKNOWN_CHAR,
-                                    icon = R.drawable.ic_round_thumbs_up_down_16,
-                                    color = MaterialTheme.colorScheme.outline,
-                                    fontSize = 13.sp,
-                                    iconSize = 20.dp,
-                                )
-                            },
-                            minLines = 2,
-                            onClick = dropUnlessResumed {
-                                navActionManager.toMediaDetails(
-                                    mediaType = item.node.mediaType,
-                                    id = item.node.id
-                                )
-                            }
-                        )
-                    }
-                }
-            }
-
-            (uiState.mediaDetails as? AnimeDetails)?.statistics?.status?.toStats()?.let { stats ->
-                InfoTitle(text = stringResource(R.string.status_distribution))
-                HorizontalStatsBar(
-                    stats = stats
-                )
-            }
         }//:Column
     }//:Scaffold
+}
+
+@Composable
+private fun VerticalDivider_init1(dividerHeight: Dp = 32.dp) {
+    VerticalDivider(
+        modifier = Modifier
+            .padding(horizontal = 8.dp)
+            .height(dividerHeight)
+    )
 }
 
 @Preview

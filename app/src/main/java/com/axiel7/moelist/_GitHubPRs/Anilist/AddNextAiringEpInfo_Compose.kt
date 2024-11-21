@@ -31,11 +31,11 @@ fun AddNextAiringEpInfo_Compose(uiState: UserMediaListUiState, event: UserMediaL
 
 
     Thread {
-        println("alquery.getAiringInfo run. if this is run too much. cache it. ")
+        //println("alquery.getAiringInfo run. if this is run too much. cache it. ")
 
         // Perform network operation here
         runBlocking {
-            var al_mediaList = AnilistQuery.GetAiringInfo_ToPoco_FromCache(airingAnimes_idlist)
+            var al_mediaList = AnilistQuery.GetAiringInfo_ToPoco_FromCache_ListT_withMeasureTime(airingAnimes_idlist)
             if (al_mediaList.isNullOrEmpty() == true)
                 return@runBlocking
 

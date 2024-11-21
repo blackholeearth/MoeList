@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package com.axiel7.moelist._GitHubPRs.Anilist
+package com.axiel7.moelist._GitHubPRs.Anilist.other
 import com.axiel7.moelist.BuildConfig
 
 //package com.axiel7.anihyou.utils

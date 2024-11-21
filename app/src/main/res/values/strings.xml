@@ -26,8 +26,8 @@
     <string name="apply">Apply</string>
     <string name="episodes">Episodes</string>
     <plurals name="num_episodes">
-        <item quantity="one">%d episode</item>
-        <item quantity="other">%d episodes</item>
+        <item quantity="one">%d ep</item>
+        <item quantity="other">%d eps</item>
     </plurals>
     <string name="chapters">Chapters</string>
     <plurals name="num_chapters">

@@ -9,6 +9,7 @@ import coil3.disk.directory
 import coil3.memory.MemoryCache
 import coil3.request.crossfade
 import com.axiel7.moelist._GitHubPRs.Anilist.AnilistQuery
+//import com.axiel7.moelist._GitHubPRs.Anilist.RoomDB.ALDatabase
 import com.axiel7.moelist.data.model.media.TitleLanguage
 import com.axiel7.moelist.di.dataStoreModule
 import com.axiel7.moelist.di.databaseModule
@@ -46,8 +47,23 @@ class App : Application(), KoinComponent, SingletonImageLoader.Factory {
             )
         }
 
+
         GlobalScope.launch(Dispatchers.IO) {
-            AnilistQuery.cache = AnilistQuery.New_ObjectKache()
+            AnilistQuery.init_New_ObjectKache_ListT()
+//            AnilistQuery.cacheDir = cacheDir
+            AnilistQuery.init_New_OkHttpCache(cacheDir)
+
+
+//            val aldb = ALDatabase.getDatabase(this@App);
+
+//            SharedPrefs.init_New_SharedPrefs(context=this@App )
+//            var kacheObj = SharedPrefs.Instance.get_Kache()
+//            AnilistQuery.cache = kacheObj
+
+//            var allmedias = aldb.MediaDao().getAllMedias()
+//            for (itemx in allmedias) {
+//                AnilistQuery.cache.put(,)
+//            }
         }
 
     }

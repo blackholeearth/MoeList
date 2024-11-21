@@ -10,6 +10,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PlainTooltip
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
@@ -20,11 +21,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.LineHeightStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.axiel7.moelist.R
 import com.axiel7.moelist.ui.theme.MoeListTheme
 import kotlinx.coroutines.launch
@@ -137,5 +141,50 @@ fun TextIconVertical(
 fun TextIconVerticalPreview() {
     MoeListTheme {
         TextIconVertical(text = "This is an example", icon = R.drawable.ic_round_details_star_24)
+    }
+}
+
+
+
+//------------ TextSubtitle
+
+@Composable
+fun TextSubtitleVertical(
+    text: String?,
+    subtitle: String,
+    modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
+) {
+    Column(
+        modifier = modifier
+            .padding(horizontal = 4.dp)
+            .defaultPlaceholder(visible = isLoading),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = text ?: stringResource(R.string.unknown),
+            color = MaterialTheme.colorScheme.onSurface,
+            textAlign = TextAlign.Center,
+        )
+        Text(
+            text = subtitle,
+            color = MaterialTheme.colorScheme.outline,
+            fontSize = 13.sp,
+            textAlign = TextAlign.Center,
+            lineHeight = 15.sp
+        )
+    }
+}
+
+@Preview
+@Composable
+fun TextSubtitleVerticalPreview() {
+    MoeListTheme {
+        Surface {
+            TextSubtitleVertical(
+                text = "89%",
+                subtitle = "Mean score"
+            )
+        }
     }
 }

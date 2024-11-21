@@ -1,4 +1,4 @@
-package com.axiel7.moelist._GitHubPRs.Anilist
+package com.axiel7.moelist._GitHubPRs.Anilist.other
 //package com.axiel7.anihyou.di
 
 
@@ -12,11 +12,11 @@ package com.axiel7.moelist._GitHubPRs.Anilist
 //import okhttp3.Interceptor
 //import okhttp3.OkHttpClient
 //import okhttp3.Response
-////import dagger.Module
-////import dagger.Provides
-////import dagger.hilt.InstallIn
-////import dagger.hilt.components.SingletonComponent
-////import javax.inject.Singleton
+//import dagger.Module
+//import dagger.Provides
+//import dagger.hilt.InstallIn
+//import dagger.hilt.components.SingletonComponent
+//import javax.inject.Singleton
 //
 //
 ////NetworkModule NetworkModuleInstance  = new NetworkModule();
