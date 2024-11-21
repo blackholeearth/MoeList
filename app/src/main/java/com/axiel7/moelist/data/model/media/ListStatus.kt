@@ -2,8 +2,6 @@ package com.axiel7.moelist.data.model.media
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.axiel7.moelist.R
@@ -37,7 +35,8 @@ enum class ListStatus(
 ) : LocalizableAndColorable {
     @SerialName("watching")
     WATCHING(
-        icon = R.drawable.play_circle_outline_24
+        icon = R.drawable.play_arrow_24dp_wght400
+//        icon = R.drawable.play_circle_outline_24
     ),
 
     @SerialName("reading")
@@ -47,7 +46,8 @@ enum class ListStatus(
 
     @SerialName("plan_to_watch")
     PLAN_TO_WATCH(
-        icon = R.drawable.ic_round_access_time_24
+        icon = R.drawable.calendar_clock_24dp_wght400
+//      icon = R.drawable.ic_round_access_time_24
     ),
 
     @SerialName("plan_to_read")
@@ -82,13 +82,27 @@ enum class ListStatus(
     val stringRes
         get() = when (this) {
             WATCHING -> R.string.watching
-            READING -> R.string.reading
+            PLAN_TO_WATCH -> R.string.ptw
             COMPLETED -> R.string.completed
             ON_HOLD -> R.string.on_hold
             DROPPED -> R.string.dropped
-            PLAN_TO_WATCH -> R.string.ptw
+
+            READING -> R.string.reading
             PLAN_TO_READ -> R.string.ptr
         }
+
+    val stringResShort
+        get() = when (this) {
+            WATCHING -> R.string.watching_SH
+            COMPLETED -> R.string.completed_SH
+            PLAN_TO_WATCH -> R.string.ptw_SH
+            ON_HOLD -> R.string.on_hold_SH
+            DROPPED -> R.string.dropped_SH
+
+            READING -> R.string.reading
+            PLAN_TO_READ -> R.string.ptr_SH
+        }
+
 
     @Composable
     override fun primaryColor() = when (this) {

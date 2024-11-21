@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Surface
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,7 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.axiel7.moelist.data.model.media.ListStatus
 import com.axiel7.moelist.data.model.media.ListStatus.Companion.listStatusValues
 import com.axiel7.moelist.data.model.media.MediaType
 import com.axiel7.moelist.ui.base.TabRowItem
@@ -26,6 +30,7 @@ import com.axiel7.moelist.ui.base.navigation.NavActionManager
 import com.axiel7.moelist.ui.composables.LoadingDialog
 import com.axiel7.moelist.ui.composables.TabRowWithPager
 import com.axiel7.moelist.ui.editmedia.EditMediaSheet
+import com.axiel7.moelist.ui.theme.MoeListTheme
 import com.axiel7.moelist.ui.userlist.composables.MediaListSortDialog
 import com.axiel7.moelist.ui.userlist.composables.SetScoreDialog
 import com.axiel7.moelist.utils.ContextExtensions.showToast
@@ -47,7 +52,7 @@ fun UserMediaListWithTabsView(
     val tabRowItems = remember {
         listStatusValues(mediaType)
             .map {
-                TabRowItem(value = it, title = it.stringRes)
+                TabRowItem(value = it, title = it.stringResShort)
             }.toTypedArray()
     }
     val editSheetState = rememberModalBottomSheetState()
@@ -65,7 +70,7 @@ fun UserMediaListWithTabsView(
                 top = padding.calculateTopPadding(),
             ),
         beyondBoundsPageCount = -1,
-        isTabScrollable = true
+        isTabScrollable = true,
     ) {
         val listStatus = tabRowItems[it].value
         val viewModel: UserMediaListViewModel = koinViewModel(
@@ -139,3 +144,5 @@ fun UserMediaListWithTabsView(
         }
     }//:Pager
 }
+
+
