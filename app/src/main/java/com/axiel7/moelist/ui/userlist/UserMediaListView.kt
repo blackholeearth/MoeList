@@ -72,10 +72,11 @@ fun UserMediaListView(
     val haptic = LocalHapticFeedback.current
     val pullRefreshState = rememberPullToRefreshState()
 
-    //fix - endless loop
-    LaunchedEffect(key1 = "AddNextAiringEpInfo_Compose",
-        AddNextAiringEpInfo_Compose(uiState, event)
-    ) { }
+    // --causing wrong item dialog on longpress??
+//    //fix - endless loop
+//    LaunchedEffect(key1 = "AddNextAiringEpInfo_Compose",
+//        AddNextAiringEpInfo_Compose(uiState, event)
+//    ) { }
 
 
     @Composable

@@ -76,6 +76,9 @@ class AnilistQuery {
 
 
         //---------------Normal
+        /**
+         * Uses withCache
+         */
         suspend fun AddNextAiringEpInfo_withMeasureTime(
             result: com.axiel7.moelist.data.model.Response<List<UserAnimeList>>) {
             result.data?.let {
@@ -87,6 +90,9 @@ class AnilistQuery {
         }
 
         //AnimeRepository
+        /**
+         * Uses withCache
+         */
         suspend fun AddNextAiringEpInfo( userAnimeList :List<UserAnimeList>
         ):List<UserAnimeList>?
         {
