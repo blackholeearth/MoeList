@@ -16,7 +16,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.axiel7.moelist"
+        applicationId = "com.axiel7.moelist.ForkB"
         minSdk = 23
         targetSdk = 35
         versionCode = 146
@@ -59,6 +59,7 @@ android {
             buildConfigField("String", "CLIENT_ID", properties.getProperty("CLIENT_ID"))
             buildConfigField("String", "ANILIST_CLIENT_ID", properties.getProperty("ANILIST_CLIENT_ID"))
             buildConfigField("String", "ANILIST_CLIENT_SECRET", properties.getProperty("ANILIST_CLIENT_SECRET"))
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     splits {
