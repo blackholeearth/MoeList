@@ -24,7 +24,7 @@
     <string name="title_profile">Profile</string>
     <string name="cancel">Cancel</string>
     <string name="apply">Apply</string>
-    <string name="episodes">Eps</string>
+    <string name="episodes">Episodes</string>
     <plurals name="num_episodes">
         <item quantity="one">%d ep</item>
         <item quantity="other">%d eps</item>
@@ -270,6 +270,9 @@
     <string name="manga_stats">Manga Stats</string>
     <string name="last_used">Last used</string>
     <string name="indonesian_native" translatable="false">Indonesia</string>
+    <string name="slovak_native" translatable="false">Slovenčina</string>
+    <string name="polish_native" translatable="false">Polski</string>
+
     <string name="romaji">Romaji</string>
     <string name="title_language">Title language</string>
     <string name="experimental">Experimental</string>
@@ -363,7 +366,8 @@
     <string name="genre_memoir">Memoir</string>
     <string name="genre_villainess">Villainess</string>
     <string name="contributors">Contributors</string>
-    <string name="slovak_native" translatable="false">Slovenčina</string>
+
+
     <string name="enable_list_tabs">Enable list tabs</string>
     <string name="enable_list_tabs_subtitle">Use tabs in Anime/Manga list instead of Floating Action Button</string>
     <string name="always_load_characters">Always load characters</string>
@@ -378,5 +382,4 @@
     <string name="cm">CM</string>
     <string name="pv">PV</string>
     <string name="black_theme_variant">Black theme variant</string>
-    <string name="polish_native" translatable="false">Polski</string>
 </resources>
