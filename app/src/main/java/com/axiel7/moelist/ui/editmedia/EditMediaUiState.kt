@@ -21,6 +21,10 @@ data class EditMediaUiState(
     val priority: Int = 0,
     val tags: String? = null,
     val comments: String? = null,
+
+    /*Hide Not-So-Important Fiels */
+    var showMoreFields: Boolean =false,
+
     val openStartDatePicker: Boolean = false,
     val openFinishDatePicker: Boolean = false,
     val openDeleteDialog: Boolean = false,

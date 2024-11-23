@@ -6,11 +6,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -25,11 +25,13 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
+import androidx.compose.material3.SheetValue.Hidden
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -95,10 +97,30 @@ fun EditMediaSheet(
             viewModel.setEditVariables(myListStatus)
     }
 
+
+//    var SheetStateWinner = sheetState
+//    var sheetState2 = rememberModalBottomSheetState(
+//        skipPartiallyExpanded = if(uiState.showMoreFields) true else false,
+//    )
+//    var isSheetVisible = sheetState.hasPartiallyExpandedState || sheetState.hasExpandedState;
+//    if(isSheetVisible)
+//        SheetStateWinner = sheetState2
+
+//    var sheetStateWinner = sheetState
+//    val sheetState2 = SheetState(
+//        skipPartiallyExpanded = true,
+//        density = LocalDensity.current,
+//        initialValue = SheetValue.PartiallyExpanded
+//    )
+//    if(uiState.showMoreFields )
+//        if(sheetState.currentValue != SheetValue.Hidden)
+//            sheetStateWinner = sheetState2
+
     EditMediaSheetContent(
         uiState = uiState,
         event = viewModel,
         sheetState = sheetState,
+//        sheetState = sheetStateWinner,
         bottomPadding = bottomPadding,
         onEdited = onEdited,
         onDismissed = onDismissed,
@@ -121,6 +143,9 @@ private fun EditMediaSheetContent(
         listStatusValues(uiState.mediaType)
     }
     val datePickerState = rememberDatePickerState()
+
+    var isTagsSectionVisible = uiState.showMoreFields;
+    var isRewatchSectionVisible = uiState.showMoreFields;
 
     if (uiState.openStartDatePicker || uiState.openFinishDatePicker) {
         EditMediaDatePicker(
@@ -163,6 +188,7 @@ private fun EditMediaSheetContent(
         sheetState = sheetState,
         onDismissRequest = onDismissed,
         contentWindowInsets = { WindowInsets(0, 0, 0, 0) }
+
     ) {
         Column(
             modifier = Modifier
@@ -186,10 +212,17 @@ private fun EditMediaSheetContent(
                     CircularProgressIndicator(modifier = Modifier.size(24.dp))
                 }
 
+                //location 2
+//                TextButton(onClick = { event?.showMoreFields( !uiState.showMoreFields) }) {
+//                    var text = if(uiState.showMoreFields) "<...Less" else "More... ˅" ;
+//                    Text(text = text)
+//                }
+
                 Button(onClick = { event?.updateListItem() }) {
                     Text(text = stringResource(if (uiState.isNewEntry) R.string.add else R.string.apply))
                 }
             }
+
 
             Row(
                 modifier = Modifier
@@ -213,7 +246,8 @@ private fun EditMediaSheetContent(
             }
 
             EditMediaProgressRow(
-                label = if (uiState.mediaType == MediaType.ANIME) stringResource(R.string.episodes)
+                label =
+                if (uiState.mediaType == MediaType.ANIME) stringResource(R.string.episodes)
                 else stringResource(R.string.chapters),
                 progress = uiState.progress,
                 modifier = Modifier
@@ -241,42 +275,10 @@ private fun EditMediaSheetContent(
                 )
             }
 
-            Row(
-                modifier = Modifier.fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            )
-            {
-                Text(
-                    text = stringResource(id = R.string.score_value, uiState.score.scoreText()),
-                    modifier = Modifier
-                        .padding(top = 16.dp)
-                        .fillMaxWidth().weight(50f),
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.padding(horizontal = 8.dp))
-                ScoreSlider(
-                    score = uiState.score,
-                    onValueChange = { event?.onChangeScore(it) },
-                    modifier = Modifier
-                        .padding( vertical = 4.dp)
-                        .fillMaxWidth().weight(50f)
-
-                )
-            }
-
-
-            HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
-
-            OutlinedTextField(
-                value = uiState.comments.orEmpty(),
-                onValueChange = {
-                    event?.onChangeComments(it)
-                },
-                modifier = Modifier.padding(horizontal = 16.dp),
-                label = { Text(text = stringResource(R.string.notes)) },
-                minLines = 2
-            )
+            val Text = stringResource(id = R.string.score_value, uiState.score.scoreText());
+            val Score = uiState.score;
+            val OnValueChange :(Int)->Unit = { event?.onChangeScore(it) };
+            ScoreSliderCompound(Text, Score,OnValueChange)
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
 
@@ -285,7 +287,8 @@ private fun EditMediaSheetContent(
             {
                 ClickableOutlinedTextField(
                     modifier = Modifier
-                        .fillMaxWidth().weight(1f)
+                        .fillMaxWidth()
+                        .weight(1f)
                         .padding(end = 8.dp)
                     ,
                     value = uiState.startDate.toLocalized(),
@@ -309,7 +312,8 @@ private fun EditMediaSheetContent(
                 )
                 ClickableOutlinedTextField(
                     modifier = Modifier
-                        .fillMaxWidth().weight(1f)
+                        .fillMaxWidth()
+                        .weight(1f)
                         .padding(start = 8.dp)
                     ,
                     value = uiState.finishDate.toLocalized(),
@@ -333,74 +337,179 @@ private fun EditMediaSheetContent(
                 )
             }
 
+//            HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+
+            //NOTES
             OutlinedTextField(
-                value = uiState.tags.orEmpty(),
+                value = uiState.comments.orEmpty(),
                 onValueChange = {
-                    event?.onChangeTags(it)
+                    event?.onChangeComments(it)
                 },
-                modifier = Modifier.padding(horizontal = (16).dp)
+                modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                label = { Text(text = stringResource(R.string.tags)) }
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 8.dp),
+                label = { Text(text = stringResource(R.string.notes)) },
+                minLines = 1
             )
 
 
 
-            Row(
-                modifier = Modifier.fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            )
-            {
-                Text(
-                    text = stringResource(R.string.priority_value).format(uiState.priority.priorityLocalized()),
-                    modifier = Modifier
-                        .fillMaxWidth().weight(50f)
-                        .padding(top = 16.dp, ),
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.padding(horizontal = 8.dp))
-                Slider(
-                    value = uiState.priority.toFloat(),
-                    onValueChange = {
-                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                        event?.onChangePriority(it.roundToInt())
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth().weight(50f)
-                        .padding(vertical = 4.dp),
-                    valueRange = 0f..2f,
-                    steps = 1
-                )
-
-
+//            isTagsSectionVisible=false;
+//            isRewatchSectionVisible=false;
+            if(isTagsSectionVisible) {
+                HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+                Tags_n_PrioritySection(uiState, event, haptic)
             }
-
+            if(isRewatchSectionVisible) {
+                HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+                ReWatchSection(uiState, event, haptic)
+            }
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
 
-            var isRewatchSectionVisible = false;
-            if(isRewatchSectionVisible)
-                ReWatchSection(uiState, event, haptic)
-
-
-
-            Button(
-                onClick = { event?.toggleDeleteDialog(true) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 32.dp, vertical = 16.dp),
-                enabled = !uiState.isNewEntry,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer,
-                    contentColor = MaterialTheme.colorScheme.error
-                )
-            ) {
-                Text(text = stringResource(R.string.delete))
+            //Delete ,More
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp, vertical = 16.dp)
+            )
+            {
+                TextButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(4f),
+//                        .padding(horizontal = 32.dp, vertical = 16.dp),
+                    onClick = { event?.showMoreFields( !uiState.showMoreFields) }
+                ) {
+                    var text = if(uiState.showMoreFields)
+                        "▼...Less" else "More...▲" ;
+                    Text(text = text)
+                }
+                Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+                Button(
+                    onClick = { event?.toggleDeleteDialog(true) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(6f),
+//                        .padding(horizontal = 32.dp, vertical = 16.dp),
+                    enabled = !uiState.isNewEntry,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                        contentColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Text(text = stringResource(R.string.delete))
+                }
             }
+
+
+
+
         }//:Column
     }//:Sheet
 }
+
+
+@Composable
+private fun ScoreSliderCompound(
+    Text :String ,
+    Score :Int,
+    OnValueChange :(Int)->Unit ,
+) {
+
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    )
+    {
+        Text(
+//          text = stringResource(id = R.string.score_value, uiState.score.scoreText()),
+            text = Text,
+            modifier = Modifier
+                .padding(top = 16.dp)
+                .fillMaxWidth()
+                .weight(50f),
+            fontWeight = FontWeight.Bold
+        )
+
+        Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+        ScoreSlider(
+            score = Score,
+            onValueChange = OnValueChange, //{ event?.onChangeScore(it) },
+            modifier = Modifier
+                .padding(vertical = 4.dp)
+                .fillMaxWidth()
+                .weight(50f)
+
+        )
+    }
+}
+
+
+@Composable
+private fun Tags_n_PrioritySection(
+    uiState: EditMediaUiState,
+    event: EditMediaEvent?,
+    haptic: HapticFeedback
+) {
+    //TAGS
+    OutlinedTextField(
+        value = uiState.tags.orEmpty(),
+        onValueChange = {
+            event?.onChangeTags(it)
+        },
+        modifier = Modifier
+            .padding(horizontal = (16).dp)
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        label = { Text(text = stringResource(R.string.tags)) }
+    )
+
+    //priority
+
+    val Text = stringResource(R.string.priority_value).format(uiState.priority.priorityLocalized());
+//    val Score = uiState.score;
+//    val OnValueChange :(Int)->Unit = { event?.onChangeScore(it) };
+//    ScoreSliderCompound(Text, Score,OnValueChange)
+
+    //priority ROW
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    )
+    {
+        Text(
+            text = Text,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(50f)
+                .padding(top = 16.dp),
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+        Slider(
+            value = uiState.priority.toFloat(),
+            onValueChange = {
+                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                event?.onChangePriority(it.roundToInt())
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(50f)
+                .padding(vertical = 4.dp),
+            valueRange = 0f..2f,
+            steps = 1
+        )
+
+
+    }
+}
+
 
 @Composable
 private fun ReWatchSection(
@@ -437,28 +546,56 @@ private fun ReWatchSection(
         onPlusClick = { event?.onChangeRepeatCount(uiState.repeatCount?.plus(1)) }
     )
 
-    Text(
-        text = stringResource(
-            id = if (uiState.mediaType == MediaType.ANIME) R.string.rewatch_value
-            else R.string.reread_value,
-            uiState.repeatValue.repeatValueLocalized()
-        ),
+
+
+
+    //priority ROW
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 16.dp, start = 16.dp, end = 16.dp),
-        fontWeight = FontWeight.Bold
+            .padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly
     )
-    Slider(
-        value = uiState.repeatValue.toFloat(),
-        onValueChange = {
-            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-            event?.onChangeRepeatValue(it.roundToInt())
-        },
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-        valueRange = 0f..5f,
-        steps = 4
-    )
+    {
+
+        Text(
+            text = stringResource(
+                id = if (uiState.mediaType == MediaType.ANIME) R.string.rewatch_value
+                else R.string.reread_value,
+                uiState.repeatValue.repeatValueLocalized()
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(50f)
+                .padding(top = 16.dp),
+
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+        Slider(
+            value = uiState.repeatValue.toFloat(),
+            onValueChange = {
+                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                event?.onChangeRepeatValue(it.roundToInt())
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(50f)
+                .padding( vertical = 4.dp),
+            valueRange = 0f..5f,
+            steps = 4
+        )
+
+    }
+
+   
+
+
+
+
+
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
@@ -467,7 +604,10 @@ fun EditMediaSheetPreview() {
     MoeListTheme {
         Surface {
             EditMediaSheetContent(
-                uiState = EditMediaUiState(mediaType = MediaType.ANIME),
+                uiState = EditMediaUiState(
+                    mediaType = MediaType.ANIME,
+                    showMoreFields = true,
+                ),
                 event = null,
                 sheetState = SheetState(
                     skipPartiallyExpanded = true,
