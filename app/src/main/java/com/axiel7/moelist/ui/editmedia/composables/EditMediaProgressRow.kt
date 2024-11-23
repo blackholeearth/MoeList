@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -30,6 +31,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.axiel7.moelist.R
 import com.axiel7.moelist.data.model.media.MediaType
+import com.axiel7.moelist.data.model.media.scoreText
 import com.axiel7.moelist.ui.editmedia.EditMediaEvent
 import com.axiel7.moelist.ui.editmedia.EditMediaUiState
 import com.axiel7.moelist.ui.theme.MoeListTheme
@@ -62,13 +65,21 @@ fun EditMediaProgressRow(
     ) {
 
 
+        Text(
+//           text =  stringResource(id = R.string.score_value, uiState.score.scoreText()),
+            text =  "$label : ",
+            modifier = Modifier
+               // .padding(top = 16.dp)
+                ,
+            fontWeight = FontWeight.Bold
+        )
 
         BasicTextField(
             value = progress.toStringOrEmpty(),
             onValueChange = onValueChange,
             modifier = Modifier
                 .width(IntrinsicSize.Min)
-                .fillMaxWidth().weight(5f)
+              //  .fillMaxWidth().weight(5f)
                 .padding(end = 16.dp)
                 ,
             textStyle = MaterialTheme.typography.bodyLarge.copy(
@@ -89,16 +100,13 @@ fun EditMediaProgressRow(
                         )
                     }
                     innerTextField()
-                    //suffix
-                    totalProgress?.let {
-                        Text(text = "/$it $label",
-                            modifier = Modifier
-                                .width(IntrinsicSize.Min))
-                    }
+                  //  totalProgress?.let { Text(text = "/$it" ) }
                 }
             }
         )
 
+        totalProgress?.let { Text(text = "/$it" ) }
+        Spacer(modifier = Modifier.fillMaxWidth().weight(5f))
 
 
 //        OutlinedTextField(
@@ -123,9 +131,9 @@ fun EditMediaProgressRow(
                 //.weight(1f)
 //                .fillMaxWidth().weight(2.5f)
                 .padding(end = 8.dp),
-
             ) {
-            Text(text = stringResource(R.string.minus_one))
+//          Text(text = stringResource(R.string.minus_one))
+            Text(text = "-")
         }
 
         OutlinedButton(
@@ -136,10 +144,9 @@ fun EditMediaProgressRow(
             modifier = Modifier
                 //.weight(1f)
 //                .fillMaxWidth().weight(2.5f)
-
-
         ) {
-            Text(text = stringResource(R.string.plus_one))
+//           Text(text = stringResource(R.string.plus_one))
+             Text(text = "+")
         }
     }
 }
@@ -163,10 +170,12 @@ fun EditMediaProgressRowPreview() {
                 label = if (uiState.mediaType == MediaType.ANIME) stringResource(R.string.episodes)
                 else stringResource(R.string.chapters),
                 progress = 199,//uiState.progress,
+                totalProgress = 999,
+//                totalProgress = uiState.mediaInfo?.totalDuration(),
+
                 modifier = Modifier
                     //.padding(horizontal = 16.dp)
                         .background(MaterialTheme.colorScheme.surfaceVariant),
-                totalProgress = uiState.mediaInfo?.totalDuration(),
                 onValueChange = { event?.onChangeProgress(it.toIntOrNull()) },
                 onMinusClick = { event?.onChangeProgress((uiState.progress ?: 0) - 1) },
                 onPlusClick = { event?.onChangeProgress((uiState.progress ?: 0) + 1) }

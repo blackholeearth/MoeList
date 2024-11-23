@@ -8,6 +8,8 @@ import java.time.LocalDate
 
 interface EditMediaEvent : UiEvent {
 
+    fun showMoreFields(showMore: Boolean)
+
     fun setMediaInfo(value: BaseMediaNode)
 
     fun setEditVariables(myListStatus: BaseMyListStatus)

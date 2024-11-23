@@ -26,6 +26,10 @@ class EditMediaViewModel(
 
     override val mutableUiState = MutableStateFlow(EditMediaUiState(mediaType = mediaType))
 
+    override fun showMoreFields(showMore: Boolean) {
+        mutableUiState.update { it.copy(showMoreFields = showMore) }
+    }
+
     override fun setMediaInfo(value: BaseMediaNode) {
         mutableUiState.update { it.copy(mediaInfo = value) }
     }
