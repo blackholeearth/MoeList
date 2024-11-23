@@ -24,10 +24,10 @@
     <string name="title_profile">Profile</string>
     <string name="cancel">Cancel</string>
     <string name="apply">Apply</string>
-    <string name="episodes">Episodes</string>
+    <string name="episodes">Eps</string>
     <plurals name="num_episodes">
-        <item quantity="one">%d episode</item>
-        <item quantity="other">%d episodes</item>
+        <item quantity="one">%d ep</item>
+        <item quantity="other">%d eps</item>
     </plurals>
     <string name="chapters">Chapters</string>
     <plurals name="num_chapters">
