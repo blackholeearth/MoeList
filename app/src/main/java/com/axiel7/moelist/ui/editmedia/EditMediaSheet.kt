@@ -3,11 +3,14 @@ package com.axiel7.moelist.ui.editmedia
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -33,6 +36,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -212,7 +216,9 @@ private fun EditMediaSheetContent(
                 label = if (uiState.mediaType == MediaType.ANIME) stringResource(R.string.episodes)
                 else stringResource(R.string.chapters),
                 progress = uiState.progress,
-                modifier = Modifier.padding(horizontal = 16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
                 totalProgress = uiState.mediaInfo?.totalDuration(),
                 onValueChange = { event?.onChangeProgress(it.toIntOrNull()) },
                 onMinusClick = { event?.onChangeProgress((uiState.progress ?: 0) - 1) },
@@ -235,148 +241,149 @@ private fun EditMediaSheetContent(
                 )
             }
 
-            Text(
-                text = stringResource(id = R.string.score_value, uiState.score.scoreText()),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp, start = 16.dp, end = 16.dp),
-                fontWeight = FontWeight.Bold
+            Row(
+                modifier = Modifier.fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
             )
-            ScoreSlider(
-                score = uiState.score,
-                onValueChange = { event?.onChangeScore(it) },
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
-            )
+            {
+                Text(
+                    text = stringResource(id = R.string.score_value, uiState.score.scoreText()),
+                    modifier = Modifier
+                        .padding(top = 16.dp)
+                        .fillMaxWidth().weight(50f),
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+                ScoreSlider(
+                    score = uiState.score,
+                    onValueChange = { event?.onChangeScore(it) },
+                    modifier = Modifier
+                        .padding( vertical = 4.dp)
+                        .fillMaxWidth().weight(50f)
+
+                )
+            }
+
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
-
-            ClickableOutlinedTextField(
-                value = uiState.startDate.toLocalized(),
-                onValueChange = { },
-                label = { Text(text = stringResource(R.string.start_date)) },
-                trailingIcon = {
-                    if (uiState.startDate != null) {
-                        IconButton(onClick = { event?.onChangeStartDate(null) }) {
-                            Icon(
-                                painter = painterResource(R.drawable.outline_cancel_24),
-                                contentDescription = stringResource(R.string.delete)
-                            )
-                        }
-                    }
-                },
-                onClick = {
-                    datePickerState.selectedDateMillis = uiState.startDate
-                        ?.toEpochMillis(offset = ZoneOffset.UTC)
-                    event?.openStartDatePicker()
-                }
-            )
-            ClickableOutlinedTextField(
-                value = uiState.finishDate.toLocalized(),
-                onValueChange = { },
-                modifier = Modifier.padding(vertical = 8.dp),
-                label = { Text(text = stringResource(R.string.end_date)) },
-                trailingIcon = {
-                    if (uiState.finishDate != null) {
-                        IconButton(onClick = { event?.onChangeFinishDate(null) }) {
-                            Icon(
-                                painter = painterResource(R.drawable.outline_cancel_24),
-                                contentDescription = stringResource(R.string.delete)
-                            )
-                        }
-                    }
-                },
-                onClick = {
-                    datePickerState.selectedDateMillis = uiState.finishDate
-                        ?.toEpochMillis(offset = ZoneOffset.UTC)
-                    event?.openFinishDatePicker()
-                }
-            )
-
-            OutlinedTextField(
-                value = uiState.tags.orEmpty(),
-                onValueChange = {
-                    event?.onChangeTags(it)
-                },
-                modifier = Modifier.padding(16.dp),
-                label = { Text(text = stringResource(R.string.tags)) }
-            )
-
-            Text(
-                text = stringResource(R.string.priority_value).format(uiState.priority.priorityLocalized()),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp, start = 16.dp, end = 16.dp),
-                fontWeight = FontWeight.Bold
-            )
-            Slider(
-                value = uiState.priority.toFloat(),
-                onValueChange = {
-                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                    event?.onChangePriority(it.roundToInt())
-                },
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-                valueRange = 0f..2f,
-                steps = 1
-            )
-
-            TextCheckBox(
-                text = stringResource(
-                    if (uiState.mediaType == MediaType.ANIME) R.string.rewatching
-                    else R.string.rereading
-                ),
-                checked = uiState.isRepeating,
-                onCheckedChange = {
-                    event?.onChangeIsRepeating(it)
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-            )
-
-            EditMediaProgressRow(
-                label = stringResource(
-                    if (uiState.mediaType == MediaType.ANIME) R.string.total_rewatches
-                    else R.string.total_rereads
-                ),
-                progress = uiState.repeatCount,
-                modifier = Modifier.padding(16.dp),
-                totalProgress = null,
-                onValueChange = { event?.onChangeRepeatCount(it.toIntOrNull()) },
-                onMinusClick = { event?.onChangeRepeatCount(uiState.repeatCount?.minus(1)) },
-                onPlusClick = { event?.onChangeRepeatCount(uiState.repeatCount?.plus(1)) }
-            )
-
-            Text(
-                text = stringResource(
-                    id = if (uiState.mediaType == MediaType.ANIME) R.string.rewatch_value
-                    else R.string.reread_value,
-                    uiState.repeatValue.repeatValueLocalized()
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp, start = 16.dp, end = 16.dp),
-                fontWeight = FontWeight.Bold
-            )
-            Slider(
-                value = uiState.repeatValue.toFloat(),
-                onValueChange = {
-                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                    event?.onChangeRepeatValue(it.roundToInt())
-                },
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-                valueRange = 0f..5f,
-                steps = 4
-            )
 
             OutlinedTextField(
                 value = uiState.comments.orEmpty(),
                 onValueChange = {
                     event?.onChangeComments(it)
                 },
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(horizontal = 16.dp),
                 label = { Text(text = stringResource(R.string.notes)) },
                 minLines = 2
             )
+
+            HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+
+            //startDATE
+            Row(modifier  = Modifier.padding(horizontal = 16.dp ))
+            {
+                ClickableOutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth().weight(1f)
+                        .padding(end = 8.dp)
+                    ,
+                    value = uiState.startDate.toLocalized(),
+                    onValueChange = { },
+                    label = { Text(text = stringResource(R.string.start_date)) },
+                    trailingIcon = {
+                        if (uiState.startDate != null) {
+                            IconButton(onClick = { event?.onChangeStartDate(null) }) {
+                                Icon(
+                                    painter = painterResource(R.drawable.outline_cancel_24),
+                                    contentDescription = stringResource(R.string.delete)
+                                )
+                            }
+                        }
+                    },
+                    onClick = {
+                        datePickerState.selectedDateMillis = uiState.startDate
+                            ?.toEpochMillis(offset = ZoneOffset.UTC)
+                        event?.openStartDatePicker()
+                    }
+                )
+                ClickableOutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth().weight(1f)
+                        .padding(start = 8.dp)
+                    ,
+                    value = uiState.finishDate.toLocalized(),
+                    onValueChange = { },
+                    label = { Text(text = stringResource(R.string.end_date)) },
+                    trailingIcon = {
+                        if (uiState.finishDate != null) {
+                            IconButton(onClick = { event?.onChangeFinishDate(null) }) {
+                                Icon(
+                                    painter = painterResource(R.drawable.outline_cancel_24),
+                                    contentDescription = stringResource(R.string.delete)
+                                )
+                            }
+                        }
+                    },
+                    onClick = {
+                        datePickerState.selectedDateMillis = uiState.finishDate
+                            ?.toEpochMillis(offset = ZoneOffset.UTC)
+                        event?.openFinishDatePicker()
+                    }
+                )
+            }
+
+            OutlinedTextField(
+                value = uiState.tags.orEmpty(),
+                onValueChange = {
+                    event?.onChangeTags(it)
+                },
+                modifier = Modifier.padding(horizontal = (16).dp)
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                label = { Text(text = stringResource(R.string.tags)) }
+            )
+
+
+
+            Row(
+                modifier = Modifier.fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            )
+            {
+                Text(
+                    text = stringResource(R.string.priority_value).format(uiState.priority.priorityLocalized()),
+                    modifier = Modifier
+                        .fillMaxWidth().weight(50f)
+                        .padding(top = 16.dp, ),
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.padding(horizontal = 8.dp))
+                Slider(
+                    value = uiState.priority.toFloat(),
+                    onValueChange = {
+                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        event?.onChangePriority(it.roundToInt())
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth().weight(50f)
+                        .padding(vertical = 4.dp),
+                    valueRange = 0f..2f,
+                    steps = 1
+                )
+
+
+            }
+
+
+            HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+
+            var isRewatchSectionVisible = false;
+            if(isRewatchSectionVisible)
+                ReWatchSection(uiState, event, haptic)
+
+
 
             Button(
                 onClick = { event?.toggleDeleteDialog(true) },
@@ -393,6 +400,64 @@ private fun EditMediaSheetContent(
             }
         }//:Column
     }//:Sheet
+}
+
+@Composable
+private fun ReWatchSection(
+    uiState: EditMediaUiState,
+    event: EditMediaEvent?,
+    haptic: HapticFeedback
+) {
+    // Rewatching START
+    TextCheckBox(
+        text = stringResource(
+            if (uiState.mediaType == MediaType.ANIME) R.string.rewatching
+            else R.string.rereading
+        ),
+        checked = uiState.isRepeating,
+        onCheckedChange = {
+            event?.onChangeIsRepeating(it)
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+            .padding(top = 8.dp)
+    )
+
+    EditMediaProgressRow(
+        label = stringResource(
+            if (uiState.mediaType == MediaType.ANIME) R.string.total_rewatches
+            else R.string.total_rereads
+        ),
+        progress = uiState.repeatCount,
+        modifier = Modifier.padding(horizontal = 16.dp),
+        totalProgress = null,
+        onValueChange = { event?.onChangeRepeatCount(it.toIntOrNull()) },
+        onMinusClick = { event?.onChangeRepeatCount(uiState.repeatCount?.minus(1)) },
+        onPlusClick = { event?.onChangeRepeatCount(uiState.repeatCount?.plus(1)) }
+    )
+
+    Text(
+        text = stringResource(
+            id = if (uiState.mediaType == MediaType.ANIME) R.string.rewatch_value
+            else R.string.reread_value,
+            uiState.repeatValue.repeatValueLocalized()
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp, start = 16.dp, end = 16.dp),
+        fontWeight = FontWeight.Bold
+    )
+    Slider(
+        value = uiState.repeatValue.toFloat(),
+        onValueChange = {
+            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+            event?.onChangeRepeatValue(it.roundToInt())
+        },
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+        valueRange = 0f..5f,
+        steps = 4
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
