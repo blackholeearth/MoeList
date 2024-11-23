@@ -34,6 +34,9 @@ android {
 
     buildTypes {
         debug {
+            /*AppName Shows up in Launcher*/
+            resValue("string", "app_name", "Moelist - Debug")
+
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-DEBUG"
             isDebuggable = true
