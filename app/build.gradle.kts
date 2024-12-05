@@ -16,7 +16,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.axiel7.moelist.ForkB"
+        applicationId = "com.axiel7.myMAL"
         minSdk = 23
         targetSdk = 35
         versionCode = 146
@@ -36,7 +36,7 @@ android {
     buildTypes {
         debug {
             /*AppName Shows up in Launcher*/
-            resValue("string", "app_name", "Moelist ForkB - Debug")
+            resValue("string", "app_name", "myMAL-DBG")
 
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-DEBUG"
@@ -52,7 +52,7 @@ android {
             buildConfigField("String", "ANILIST_CLIENT_SECRET", properties.getProperty("ANILIST_CLIENT_SECRET"))
         }
         release {
-            resValue("string", "app_name", "Moelist ForkB")
+            resValue("string", "app_name", "myMAL")
 
             isDebuggable = false
             isMinifyEnabled = true
