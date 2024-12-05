@@ -16,7 +16,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.axiel7.myMAL"
+        applicationId = "com.axiel7.moelist.myMAL"
         minSdk = 23
         targetSdk = 35
         versionCode = 146
