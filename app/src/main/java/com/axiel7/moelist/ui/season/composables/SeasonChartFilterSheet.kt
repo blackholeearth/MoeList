@@ -18,6 +18,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -29,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.axiel7.moelist.R
@@ -112,6 +114,7 @@ fun SeasonChartFilterSheet(
             ) {
                 Season.entries.forEach { season ->
                     SelectableIconToggleButton(
+                        showText=true,
                         icon = season.icon,
                         tooltipText = season.localized(),
                         value = season,
@@ -177,12 +180,19 @@ fun SeasonChartFilterSheet(
 fun SeasonChartFilterSheetPreview() {
     MoeListTheme {
         Surface {
+
+            var sheetstate1 = SheetState(
+                skipPartiallyExpanded = true,
+                initialValue = SheetValue.Expanded,
+                density =  Density(1f)
+                );
+
             SeasonChartFilterSheet(
                 uiState = SeasonChartUiState(),
                 event = null,
                 onApply = {},
                 onDismiss = {},
-                sheetState = rememberModalBottomSheetState(),
+                sheetState = sheetstate1,
             )
         }
     }
