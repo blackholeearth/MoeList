@@ -27,6 +27,15 @@ sealed class BottomDestination(
         iconSelected = R.drawable.ic_round_home_24
     )
 
+    data object Seasonal : BottomDestination(
+        value = "Seasonal",
+        route = Route.Tab.SeasonChart,  //Route.SeasonChart,
+        title = R.string.seasonal,
+        icon = R.drawable.ic_round_event_24,
+        iconSelected = R.drawable.ic_round_event_24
+    )
+
+
     data object AnimeList : BottomDestination(
         value = "anime",
         route = Route.Tab.Anime(mediaType = MediaType.ANIME),
@@ -60,16 +69,17 @@ sealed class BottomDestination(
     )
 
     companion object {
-        val values = listOf(Home, AnimeList, MangaList, More)
+        val values      = listOf(Home, Seasonal, AnimeList, MangaList, More)
 
-        val railValues = listOf(Home, AnimeList, MangaList, Profile, More)
+        val railValues  = listOf(Home, Seasonal, AnimeList, MangaList, Profile, More)
 
         fun String.toBottomDestinationIndex() = when (this) {
             Home.value -> 0
-            AnimeList.value -> 1
-            MangaList.value -> 2
-            More.value -> 3
-            Profile.value -> 4
+            Seasonal.value -> 1
+            AnimeList.value -> 2
+            MangaList.value -> 3
+            More.value -> 4
+            Profile.value -> 5
             else -> null
         }
 

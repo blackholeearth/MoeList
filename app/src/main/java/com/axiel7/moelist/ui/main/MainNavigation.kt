@@ -100,6 +100,22 @@ fun MainNavigation(
             )
         }
 
+
+        composable<Route.Tab.SeasonChart>(
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
+            popEnterTransition = { fadeIn() },
+            popExitTransition = { fadeOut() },
+        ) {
+            SeasonChartView(
+//                isLoggedIn = isLoggedIn,
+                navActionManager = navActionManager,
+//                padding = padding,
+//                topBarHeightPx = topBarHeightPx,
+//                topBarOffsetY = topBarOffsetY,
+            )
+        }
+
         composable<Route.Tab.Anime>(
             typeMap = mapOf(typeOf<MediaType>() to MediaType.navType),
             enterTransition = { fadeIn() },
