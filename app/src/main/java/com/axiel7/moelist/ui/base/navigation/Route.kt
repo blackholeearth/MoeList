@@ -9,6 +9,9 @@ sealed interface Route {
         data object Home : Tab
 
         @Serializable
+        data object SeasonChart : Tab
+
+        @Serializable
         data class Anime(val mediaType: MediaType) : Tab
 
         @Serializable

@@ -54,6 +54,7 @@
     <string name="anime_ranking">Anime Ranking</string>
     <string name="manga_ranking">Manga Ranking</string>
     <string name="seasonal_chart">Seasonal Chart</string>
+    <string name="seasonal" translatable="false">Seasonal</string>
     <string name="random">Random</string>
     <string name="today">Today</string>
     <string name="nothing_today">Nothing today\n( ≧Д≦)</string>

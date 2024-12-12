@@ -2,6 +2,7 @@ package com.axiel7.moelist.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -38,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,13 +48,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.serialization.generateRouteWithArgs
 import com.axiel7.moelist.App
 import com.axiel7.moelist.data.model.media.MediaType
+import com.axiel7.moelist.ui.base.BottomDestination
 import com.axiel7.moelist.ui.base.BottomDestination.Companion.isBottomDestination
 import com.axiel7.moelist.ui.base.BottomDestination.Companion.toBottomDestinationIndex
 import com.axiel7.moelist.ui.base.ThemeStyle
 import com.axiel7.moelist.ui.base.navigation.NavActionManager
 import com.axiel7.moelist.ui.base.navigation.NavActionManager.Companion.rememberNavActionManager
+import com.axiel7.moelist.ui.base.navigation.Route
 import com.axiel7.moelist.ui.main.composables.MainBottomNavBar
 import com.axiel7.moelist.ui.main.composables.MainNavigationRail
 import com.axiel7.moelist.ui.main.composables.MainTopAppBar
@@ -252,12 +257,17 @@ fun MainView(
         derivedStateOf { navBackStackEntry?.isBottomDestination() == true }
     }
 
+    var isRouteTabSeasonal = navBackStackEntry?.destination?.route?.contains("Season",ignoreCase = true);
+    var isTabSeasonal = isRouteTabSeasonal ?: (lastTabOpened == 1) ?: false;
+
+//    Toast.makeText(LocalContext.current , "hello", Toast.LENGTH_SHORT).show()
+
     Scaffold(
         topBar = {
             if (isCompactScreen) {
                 MainTopAppBar(
                     profilePicture = profilePicture,
-                    isVisible = isBottomDestination,
+                    isVisible = if (isTabSeasonal) false else isBottomDestination ,
                     navController = navController,
                     modifier = Modifier
                         .graphicsLayer {
@@ -327,7 +337,7 @@ fun MainView(
     }
 }
 
-@Preview
+@Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun MainPreview() {
     MoeListTheme {
