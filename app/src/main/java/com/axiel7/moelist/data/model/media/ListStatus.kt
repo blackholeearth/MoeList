@@ -85,6 +85,17 @@ enum class ListStatus(
             PLAN_TO_READ -> R.string.ptr
         }
 
+    val stringResShort
+        get() = when (this) {
+            WATCHING -> R.string.watching_SH
+            COMPLETED -> R.string.completed_SH
+            PLAN_TO_WATCH -> R.string.ptw_SH
+            ON_HOLD -> R.string.on_hold_SH
+            DROPPED -> R.string.dropped_SH
+            READING -> R.string.reading
+            PLAN_TO_READ -> R.string.ptr_SH
+        }
+
     @Composable
     override fun primaryColor() = when (this) {
         WATCHING, READING -> if (isSystemInDarkTheme()) stat_current_dark else stat_current_light
