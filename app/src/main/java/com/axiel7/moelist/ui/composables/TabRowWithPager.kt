@@ -2,6 +2,8 @@ package com.axiel7.moelist.ui.composables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -41,22 +43,37 @@ fun <T> TabRowWithPager(
         val tabsLayout = @Composable {
             tabs.forEachIndexed { index, item ->
                 Tab(
+                    modifier = Modifier
+                        .padding(horizontal = 0.dp), // Reduce space around tab.
                     selected = state.currentPage == index,
                     onClick = { scope.launch { state.animateScrollToPage(index) } },
-                    text = if (item.title != null) {
-                        {
-                            Text(text = stringResource(item.title))
-                        }
-                    } else null,
-                    icon = if (item.icon != null) {
-                        {
-                            Icon(
-                                painter = painterResource(item.icon),
-                                contentDescription = item.value.toString()
+                    unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+//                    text = if (item.title != null) {
+//                        {
+//                            Text(text = stringResource(item.title) )
+//                            )
+//                        }
+//                    } else null,
+//                    icon = if (item.icon != null) {
+//                        {
+//                            Icon(
+//                                painter = painterResource(item.icon),
+//                                contentDescription = item.value.toString()
+//                            )
+//                        }
+//                    } else null
+
+                    // --- START: Key Changes ---
+                    content = {   // 3. Provide a custom content block
+                        Text(
+                            text = stringResource(item.title!!),
+                            style = MaterialTheme.typography.titleSmall,
+                            modifier = Modifier.padding(horizontal = 6.dp
+                                , vertical = 16.dp
                             )
-                        }
-                    } else null,
-                    unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    // --- END: Key Changes ---
                 )
             }
         }
@@ -83,11 +100,13 @@ fun <T> TabRowWithPager(
                 PrimaryTabRow(
                     selectedTabIndex = state.currentPage,
                     tabs = tabsLayout
+                    ,modifier = Modifier.fillMaxWidth()
                 )
             } else {
                 SecondaryTabRow(
                     selectedTabIndex = state.currentPage,
                     tabs = tabsLayout
+                    ,modifier = Modifier.fillMaxWidth()
                 )
             }
         }
