@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
@@ -116,7 +117,9 @@ private fun SeasonChartViewContent(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { showSheet = true },
-                modifier = Modifier.padding(WindowInsets.navigationBars.asPaddingValues())
+                modifier = Modifier
+                    .padding(WindowInsets.navigationBars.asPaddingValues())
+                    .padding(bottom = 78.dp)
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_round_filter_list_24),

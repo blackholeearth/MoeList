@@ -1,5 +1,6 @@
 package com.axiel7.moelist.ui.main
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
@@ -56,9 +57,11 @@ import com.axiel7.moelist.ui.base.TabletMode
 import com.axiel7.moelist.ui.base.ThemeStyle
 import com.axiel7.moelist.ui.base.navigation.NavActionManager
 import com.axiel7.moelist.ui.base.navigation.NavActionManager.Companion.rememberNavActionManager
+import com.axiel7.moelist.ui.base.navigation.Route
 import com.axiel7.moelist.ui.main.composables.MainBottomNavBar
 import com.axiel7.moelist.ui.main.composables.MainNavigationRail
 import com.axiel7.moelist.ui.main.composables.MainTopAppBar
+import com.axiel7.moelist.ui.season.SeasonChartViewModel
 import com.axiel7.moelist.ui.theme.MoeListTheme
 import com.axiel7.moelist.ui.theme.dark_scrim
 import com.axiel7.moelist.ui.theme.light_scrim
@@ -67,6 +70,7 @@ import com.axiel7.moelist.utils.MOELIST_PAGELINK
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.compose.KoinAndroidContext
+import org.koin.androidx.compose.koinViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
@@ -242,6 +246,7 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
+@SuppressLint("RestrictedApi")
 @Composable
 fun MainView(
     isCompactScreen: Boolean,
@@ -264,6 +269,8 @@ fun MainView(
         derivedStateOf { navBackStackEntry?.isBottomDestination() == true }
     }
 
+    val currentDestination = navBackStackEntry?.destination
+
     Scaffold(
         topBar = {
             if (isCompactScreen) {
@@ -271,6 +278,7 @@ fun MainView(
                     profilePicture = profilePicture,
                     isVisible = isBottomDestination,
                     navController = navController,
+                    currentDestination = currentDestination, //add this.
                     modifier = Modifier
                         .graphicsLayer {
                             translationY = topBarOffsetY.value

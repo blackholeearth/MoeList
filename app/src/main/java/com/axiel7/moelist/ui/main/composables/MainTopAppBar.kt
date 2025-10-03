@@ -29,6 +29,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
 import coil3.compose.AsyncImage
 import com.axiel7.moelist.R
 import com.axiel7.moelist.ui.base.navigation.Route
@@ -39,7 +42,17 @@ fun MainTopAppBar(
     isVisible: Boolean,
     navController: NavController,
     modifier: Modifier = Modifier,
+    currentDestination: NavDestination?, // <-- ADD this parameter
 ) {
+
+    // Determine visibility based on the current route
+    val isVisible = currentDestination?.hierarchy?.any {
+        it.hasRoute(Route.Tab.Home::class) ||
+        it.hasRoute(Route.Tab.Anime::class) ||
+        it.hasRoute(Route.Tab.Manga::class) ||
+        it.hasRoute(Route.Tab.More::class)
+    } == true
+
     AnimatedContent(
         targetState = isVisible,
         transitionSpec = {

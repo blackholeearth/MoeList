@@ -102,6 +102,13 @@ fun MainNavigation(
             )
         }
 
+        //added this
+        composable<Route.Tab.Seasonal> {
+            SeasonChartView(
+                navActionManager = navActionManager
+            )
+        }
+
         composable<Route.Tab.Anime>(
             typeMap = mapOf(typeOf<MediaType>() to MediaType.navType),
             enterTransition = { fadeIn() },
