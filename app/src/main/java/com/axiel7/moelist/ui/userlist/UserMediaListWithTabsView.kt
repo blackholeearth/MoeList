@@ -173,7 +173,7 @@ fun UserMediaListWithTabsViewPreview() {
             val tabRowItems = remember {
                 listStatusValues(mediaType)
                     .map {
-                        TabRowItem(value = it, title = it.stringRes)
+                        TabRowItem(value = it, title = it.stringResShort)
                     }.toTypedArray()
             }
 
