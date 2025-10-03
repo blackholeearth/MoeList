@@ -23,7 +23,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.axiel7.moelist"
+        applicationId = "com.axiel7.myMAL2"
         minSdk = 23
         targetSdk = 36
         versionCode = versionProps.getProperty("code").toInt()
@@ -53,8 +53,8 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            resValue("string", "app_name", "myMAL2 Dbg")
             buildConfigField("String", "CLIENT_ID", privateProps.getProperty("CLIENT_ID"))
-            resValue("string", "app_name", "MoeList Debug")
             buildConfigField("String", "ANILIST_CLIENT_ID", privateProps.getProperty("ANILIST_CLIENT_ID"))
             buildConfigField("String", "ANILIST_CLIENT_SECRET", privateProps.getProperty("ANILIST_CLIENT_SECRET"))
         }
@@ -66,6 +66,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            resValue("string", "app_name", "myMAL2")
             buildConfigField("String", "CLIENT_ID", privateProps.getProperty("CLIENT_ID"))
             buildConfigField("String", "ANILIST_CLIENT_ID", privateProps.getProperty("ANILIST_CLIENT_ID"))
             buildConfigField("String", "ANILIST_CLIENT_SECRET", privateProps.getProperty("ANILIST_CLIENT_SECRET"))
