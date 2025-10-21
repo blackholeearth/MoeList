@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
@@ -78,7 +79,7 @@ fun SeasonChartView(
 private fun SeasonChartViewContent(
     uiState: SeasonChartUiState,
     event: SeasonChartEvent?,
-    navActionManager: NavActionManager
+    navActionManager: NavActionManager,
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -111,15 +112,31 @@ private fun SeasonChartViewContent(
         }
     }
 
+    //we moved this view into bottomNav.
+    // NOW: fab button is not handled according to Apps BottomNavbar.  it was staying behind Navbar
+    //  -- THE FIX --START--
+    val fabBottomMargin = if (uiState.isBottomBarPinned) {  16.dp } else {  96.dp }
+
+    // Start with a base modifier that is always applied
+    var fabModifier: Modifier = Modifier
+        .padding(end=16.dp, bottom = fabBottomMargin)
+    // Conditionally add navigationBarsPadding() to the modifier chain
+    if (!uiState.isBottomBarPinned) {
+        fabModifier = fabModifier.navigationBarsPadding()
+    }
+    //  -- THE FIX --END--
+
     DefaultScaffoldWithTopAppBar(
         title = uiState.season.seasonYearText(),
         navigateBack = navActionManager::goBack,
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { showSheet = true },
-                modifier = Modifier
-                    .padding(WindowInsets.navigationBars.asPaddingValues())
-                    .padding(bottom = 78.dp)
+                modifier = fabModifier
+//                modifier = Modifier
+//                    //.padding(WindowInsets.navigationBars.asPaddingValues())
+//                    .navigationBarsPadding()
+//                    .padding(bottom = fabBottomMargin)
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_round_filter_list_24),
@@ -141,7 +158,7 @@ private fun SeasonChartViewContent(
                 start = 2.dp,
                 top = 8.dp,
                 end = 2.dp,
-                bottom = bottomBarPadding
+                bottom = bottomBarPadding, // prevent posters being blocked by AppsBottomNavbar
             ),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterHorizontally)

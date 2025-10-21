@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -23,7 +24,9 @@ class SeasonChartViewModel(
     defaultPreferencesRepository: DefaultPreferencesRepository
 ) : BaseViewModel<SeasonChartUiState>(), SeasonChartEvent {
 
-    override val mutableUiState = MutableStateFlow(SeasonChartUiState())
+
+
+    override val mutableUiState = MutableStateFlow(  SeasonChartUiState( ) )
 
     override fun loadMore() {
         if (mutableUiState.value.canLoadMore) {
@@ -68,6 +71,7 @@ class SeasonChartViewModel(
     }
 
     init {
+
         viewModelScope.launch(Dispatchers.IO) {
             mutableUiState
                 .distinctUntilChanged { old, new ->
@@ -115,6 +119,12 @@ class SeasonChartViewModel(
         defaultPreferencesRepository.hideScores
             .onEach { value ->
                 mutableUiState.update { it.copy(hideScore = value) }
+            }
+            .launchIn(viewModelScope)
+
+        defaultPreferencesRepository.pinnedNavBar
+            .onEach { value ->
+                mutableUiState.update { it.copy(isBottomBarPinned = value) }
             }
             .launchIn(viewModelScope)
     }

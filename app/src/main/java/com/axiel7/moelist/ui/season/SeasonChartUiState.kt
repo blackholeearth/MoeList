@@ -21,8 +21,11 @@ data class SeasonChartUiState(
     override val nextPage: String? = null,
     override val loadMore: Boolean = true,
     override val isLoading: Boolean = true,
-    override val message: String? = null
+    override val message: String? = null,
+    val isBottomBarPinned: Boolean =false,
+
 ) : PagedUiState() {
+
     override fun setLoading(value: Boolean) = copy(isLoading = value)
     override fun setMessage(value: String?) = copy(message = value)
 
